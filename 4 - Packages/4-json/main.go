@@ -29,10 +29,10 @@ func main() {
 		CreatedAt: "2021-01-01",
 	}
 
-	result, error := json.Marshal(bankAccount)
+	result, resultError := json.Marshal(bankAccount)
 
-	if error != nil {
-		panic(error)
+	if resultError != nil {
+		panic(resultError)
 	}
 
 	println(string(result))
@@ -52,10 +52,10 @@ func main() {
 
 	var newBankAccount BankAccount
 
-	err := json.Unmarshal(accountDataJson, &newBankAccount)
+	accountError := json.Unmarshal(accountDataJson, &newBankAccount)
 
-	if err != nil {
-		panic(err)
+	if accountError != nil {
+		panic(accountError)
 	}
 
 	fmt.Printf("%+v\n", newBankAccount)
@@ -68,17 +68,24 @@ func main() {
 		panic(responseError)
 	}
 
-	defer response.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+
+		}
+	}(response.Body)
 
 	responseBody, bodyError := io.ReadAll(response.Body)
 
 	if bodyError != nil {
 		panic(bodyError)
 	}
-
 	var ip Ip
 
-	json.Unmarshal(responseBody, &ip)
+	err := json.Unmarshal(responseBody, &ip)
+	if err != nil {
+		return
+	}
 
 	fmt.Printf("%+v\n", ip)
 
