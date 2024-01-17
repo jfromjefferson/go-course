@@ -98,6 +98,22 @@ func update(db *sql.DB, product Product) error {
 	return nil
 }
 
+func deleteOne(db *sql.DB, uuid string) error {
+	stmt, err := db.Prepare("DELETE FROM products WHERE uuid = ?")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(uuid)
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("Deleted %s\n", uuid)
+	return nil
+}
+
 func main() {
 	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/gocourse")
 	if err != nil {
@@ -105,14 +121,15 @@ func main() {
 	}
 	defer db.Close()
 
-	product, err := getOne(db, "642d6d7a-bd9a-4e5e-a659-a3d3554c2dd7")
-	if err != nil {
-		panic(err)
-	}
+	//product, err := getOne(db, "642d6d7a-bd9a-4e5e-a659-a3d3554c2dd7")
+	//if err != nil {
+	//	panic(err)
+	//}
 
-	product.Name = "Caneca azul"
-
-	fmt.Println(product)
+	//err = deleteOne(db, "642d6d7a-bd9a-4e5e-a659-a3d3554c2dd7")
+	//if err != nil {
+	//	panic(err)
+	//}
 
 	products, err := getAll(db)
 	if err != nil {
@@ -121,10 +138,10 @@ func main() {
 
 	fmt.Println(products)
 
-	err = update(db, *product)
-	if err != nil {
-		panic(err)
-	}
+	//err = update(db, *product)
+	//if err != nil {
+	//	panic(err)
+	//}
 
 	/*product := NewProduct("Bala de goma", 9.99)
 	err = create(db, product)
