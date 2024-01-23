@@ -1,13 +1,13 @@
 package main
 
 import (
-	"fmt"
 	"github.com/google/uuid"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
 type Customer struct {
+	gorm.Model
 	ID      int `gorm:"primaryKey"`
 	Name    string
 	Address string
@@ -15,7 +15,7 @@ type Customer struct {
 }
 
 func main() {
-	dsn := "root:root@tcp(localhost:3306)/gocourse"
+	dsn := "root:root@tcp(localhost:3306)/gocourse?charset=utf8&parseTime=True&loc=Local"
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic(err)
@@ -35,8 +35,17 @@ func main() {
 	//db.Where("name LIKE ?", "%Daenerys%").Find(&customer)
 	//fmt.Println(customer)
 
-	var customers []Customer
-	db.Find(&customers)
-	fmt.Println(customers)
+	//var customers []Customer
+	//db.Find(&customers)
+	//fmt.Println(customers)
+
+	var customer Customer
+	db.First(&customer, 1)
+	//customer.Name = "Aegon Targaryen"
+	//db.Save(&customer)
+
+	//fmt.Println(customer)
+
+	db.Delete(&customer)
 
 }
