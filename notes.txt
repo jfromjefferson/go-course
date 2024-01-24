@@ -1,4 +1,11 @@
-7 - Video 1
+8 - Video 6
 
 Create module -> go mod init github.com/user/project
 mysql -uroot -p gocourse
+
+go test -coverprofile=coverage.out
+go tool cover -html=coverage.out
+go test -bench=. -run=^#
+go test -bench=. -run=^# -count=10
+go test -bench=. -run=^# -benchmem
+go test -fuzz=. -run=^#
