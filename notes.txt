@@ -1,4 +1,4 @@
-8 - Video 6
+9 - Video 8
 
 Create module -> go mod init github.com/user/project
 mysql -uroot -p gocourse
