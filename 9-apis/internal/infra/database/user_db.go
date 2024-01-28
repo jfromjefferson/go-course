@@ -15,10 +15,6 @@ func NewUser(db *gorm.DB) *UserDB {
 	}
 }
 
-func (userDB *UserDB) Create(user *entity.User) error {
-	return userDB.DB.Create(user).Error
-}
-
 func (userDB *UserDB) FindByEmail(email string) (*entity.User, error) {
 	var user entity.User
 	err := userDB.DB.Where("email = ?", email).First(&user).Error
@@ -27,4 +23,16 @@ func (userDB *UserDB) FindByEmail(email string) (*entity.User, error) {
 	}
 
 	return &user, nil
+}
+
+func (userDB *UserDB) Create(user *entity.User) error {
+	return userDB.DB.Create(&user).Error
+}
+
+func (userDB *UserDB) Update(user *entity.User) error {
+	return userDB.DB.Save(&user).Error
+}
+
+func (userDB *UserDB) Delete(user *entity.User) error {
+	return userDB.DB.Delete(&user).Error
 }
