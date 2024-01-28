@@ -30,6 +30,23 @@ func (productDB *ProductDB) GetByID(ID pkgentity.ID) (*entity.Product, error) {
 	return &product, nil
 }
 
+func (productDB *ProductDB) FindAll(page, limit int, sort string) ([]entity.Product, error) {
+	var products []entity.Product
+	var err error
+
+	if sort != "" && sort != "asc" && sort != "desc" {
+		sort = "asc"
+	}
+
+	if page != 0 && limit != 0 {
+		err = productDB.DB.Limit(limit).Offset((page - 1) * limit).Order("created_at " + sort).Find(&products).Error
+	} else {
+		err = productDB.DB.Order("created_at " + sort).Find(&products).Error
+	}
+
+	return products, err
+}
+
 func (productDB *ProductDB) Update(ID pkgentity.ID, product *entity.Product) error {
 	_, err := productDB.GetByID(ID)
 	if err != nil {

@@ -1,11 +1,13 @@
 package database
 
 import (
+	"fmt"
 	"github.com/jfromjefferson/gi-course-9/internal/entity"
 	pkgentity "github.com/jfromjefferson/gi-course-9/pkg/entity"
 	"github.com/stretchr/testify/assert"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
+	"math/rand"
 	"testing"
 )
 
@@ -126,4 +128,34 @@ func TestProductDB_Delete(t *testing.T) {
 	err = productDB.Delete(productID, productFound)
 	assert.NotNil(t, err)
 
+}
+
+func TestProductDB_FindAll(t *testing.T) {
+	db, err := gorm.Open(sqlite.Open("file::memory:"), &gorm.Config{})
+	assert.Nil(t, err)
+	assert.NotNil(t, db)
+
+	db.AutoMigrate(&entity.Product{})
+
+	productDB := NewProduct(db)
+	assert.NotNil(t, productDB)
+
+	for i := 1; i <= 30; i++ {
+		product, err := entity.NewProduct(fmt.Sprintf("Product %d", i), fmt.Sprintf("%d", i), rand.Int())
+		assert.NotNil(t, product)
+		assert.Nil(t, err)
+
+		err = productDB.Create(product)
+		assert.Nil(t, err)
+	}
+
+	products, err := productDB.FindAll(1, 3, "asc")
+	assert.NotNil(t, products)
+	assert.Nil(t, err)
+	assert.Len(t, products, 3)
+
+	products, err = productDB.FindAll(100, 3, "asc")
+	assert.NotNil(t, products)
+	assert.Nil(t, err)
+	assert.Len(t, products, 0)
 }
