@@ -6,15 +6,31 @@ import (
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/jwtauth"
 	"github.com/jfromjefferson/gi-course-9/configs"
+	_ "github.com/jfromjefferson/gi-course-9/docs"
 	"github.com/jfromjefferson/gi-course-9/internal/entity"
 	"github.com/jfromjefferson/gi-course-9/internal/infra/database"
 	"github.com/jfromjefferson/gi-course-9/internal/infra/webserver/handlers"
+	httpSwagger "github.com/swaggo/http-swagger"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"log"
 	"net/http"
 )
 
+// @title Go API
+// @version 1.0
+// @description Product API with authentication
+// @termsOfService https://swagger.io/terms/
+
+// @contact.name Jefferson Silva
+// @contact.url https://magenta-fox-5d5416.netlify.app/
+// @contact.email jeffsilva1@outlook.com
+
+// @host localhost:8000
+// @BasePath /
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
 func main() {
 	config, err := configs.LoadConfig(".")
 	if err != nil {
@@ -51,6 +67,8 @@ func main() {
 
 	router.Post("/auth", userHandler.GetJWT)
 	router.Post("/users", userHandler.Create)
+
+	router.Get("/docs/*", httpSwagger.Handler(httpSwagger.URL("http://localhost:8000/docs/doc.json")))
 
 	fmt.Println("Server running on port 8000")
 	err = http.ListenAndServe(":8000", router)

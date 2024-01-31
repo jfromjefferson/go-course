@@ -24,6 +24,17 @@ func NewUserHandler(db database.UserInterface, JWT *jwtauth.JWTAuth, JwtExpiresI
 	}
 }
 
+// GetJWT godoc
+// @Summary Get JWT
+// @Description Get JWT...
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param request body dto.JWTInput true "user credentials"
+// @Success 200 {object} dto.JWTOutput
+// @Failure 404
+// @Failure 500 {object} Error
+// @Router /auth [post]
 func (h *UserHandler) GetJWT(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
@@ -51,11 +62,10 @@ func (h *UserHandler) GetJWT(w http.ResponseWriter, r *http.Request) {
 		"exp": time.Now().Add(time.Second * time.Duration(h.JwtExpiresIs)).Unix(),
 	})
 
-	accessToken := struct {
-		AccessToken string `json:"access_token"`
-	}{
+	accessToken := dto.JWTOutput{
 		AccessToken: token,
 	}
+
 	err = json.NewEncoder(w).Encode(accessToken)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -65,6 +75,16 @@ func (h *UserHandler) GetJWT(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
+// Create user godoc
+// @Summary Create user
+// @Description Create user...
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param request body dto.CreateUserInput true "user request"
+// @Success 201
+// @Failure 500 {object} Error
+// @Router /users [post]
 func (h *UserHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var userDTO dto.CreateUserInput
 	err := json.NewDecoder(r.Body).Decode(&userDTO)

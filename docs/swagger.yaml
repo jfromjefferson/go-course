@@ -1,0 +1,18 @@
+basePath: /
+host: http://localhost:8000
+info:
+  contact:
+    email: jeffsilva1@outlook.com
+    name: Jefferson Silva
+    url: https://magenta-fox-5d5416.netlify.app/
+  description: Product API with authentication
+  termsOfService: https://swagger.io/terms/
+  title: Go API
+  version: "1.0"
+paths: {}
+securityDefinitions:
+  ApikeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

@@ -23,3 +23,7 @@ type JWTInput struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
+
+type JWTOutput struct {
+	AccessToken string `json:"access_token"`
+}
