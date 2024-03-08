@@ -1,7 +1,11 @@
-11 - Video 16
+21 - Video 10
 
 Create module -> go mod init github.com/user/project
 mysql -uroot -p gocourse
+docker rm -f $(docker ps -a -q)
+docker build -t jfromjefferson/21-deploy:latest -f Dockerfile.prod .
+docker push jfromjefferson/21-deploy:lastest
+kind create cluster -name=gocourse
 
 go test -coverprofile=coverage.out
 go tool cover -html=coverage.out
